@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    echo "There needs to be a name, e.g., ./create-bucket my-bucket-name"
+    exit 1
+fi
+  
+BUCKET_NAME=$1
+REGION="us-east-1"  # Change this to your desired region
+
+# Create bucket in us-east-1 without LocationConstraint
+if [ "$REGION" == "us-east-1" ]; then
+    aws s3api delete-bucket \
+        --bucket $BUCKET_NAME \
+        --region $REGION \
+        --query 'Location' \
+      
+else
+    aws s3api delete-bucket \
+        --bucket $BUCKET_NAME \
+        --region $REGION \
+        --create-bucket-configuration LocationConstraint=$REGION \
+        --query 'Location' \
+        
+fi
